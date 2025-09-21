@@ -1,0 +1,161 @@
+/* Body styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url('../images/2.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+
+/* Overlay to darken the background image */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background: rgba(0, 0, 0, 0.646);
+    z-index: -1;
+}
+
+/* Multiplication table styling */
+#table {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    width: 80%; /* Adjusts table width */
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+#table th, #table td {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid white;
+}
+
+#table th {
+    background-color: #f3f3f3;
+    color: #777;
+}
+
+#table tr:nth-child(even) td {
+    background-color: #f2f2f2;
+    /* Style for the left column (row headers) */
+   /* font-size: 1.5em; /* Increase the font size */
+    font-weight: bold; /* Make it bold */
+    color: #f3f3f3; /* You can change the color if needed */
+    background-color: #322c8a; /* Darken the background to make it stand out */
+    width: 60px; /* Adjust width if needed */
+}
+
+
+
+#table tr:nth-child(odd) td {
+   
+    background-color: #f2f2f2;
+    /* Style for the left column (row headers) */
+   /* font-size: 1.5em; /* Increase the font size */
+    font-weight: bold; /* Make it bold */
+    color: #f3f3f3; /* You can change the color if needed */
+    background-color: #7581e9; /* Darken the background to make it stand out */
+    width: 60px; /* Adjust width if needed */
+}
+
+/* Center other elements relative to overlay */
+header, nav, .logo, #multiplication-table, #practice-mode, #progress-tracker, footer {
+    position: relative;
+    z-index: 1;
+}
+
+header {
+    background-color: #211a87;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+}
+
+h2 {
+    color: #fff;
+}
+
+nav {
+    text-align: center;
+    margin-top: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #211a87;
+    transition: background-color 0.3s ease;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    background-color: #07014e;
+}
+
+/* Center content horizontally */
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+#result {
+    font-size: xx-large;
+    font-weight: bold;
+    color: #fff;
+}
+
+#practice-mode, #progress-tracker {
+    font-size: large;
+    color: #fff;
+}
+
+#practice-mode, #progress-tracker, #result {
+    width: 80%;
+    max-width: 310px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #211a87;
+    border-radius: 8px;
+}
+
+footer {
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    font-size: large;
+    font-weight: bold;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #211a87;
+}
+
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
