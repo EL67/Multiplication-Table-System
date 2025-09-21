@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiplication Table System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{ --brand:#0033cc; --brand-600:#002299; --ink:#0f172a; --muted:#64748b; --bg:#f8fafc; --card:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI; background:var(--bg); color:var(--ink)}
+    
+    /* Header styling */
+    header{
+      padding:18px 20px;
+      background:#fff;
+      box-shadow:0 2px 10px rgba(2,6,23,.06);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header h1{margin:0; text-align: center;}
+    
+    /* Dark mode toggle in top left */
+    .toggle{
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Centered navigation */
+    nav{
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #fff;
+    }
+    nav a{color:var(--brand);text-decoration:none;font-weight:700}
+
+    .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
+    .card{background:var(--card);border-radius:16px;box-shadow:0 12px 30px rgba(2,6,23,.08);padding:20px}
+    .controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+    select{padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px}
+    button{padding:10px 14px;border:none;border-radius:12px;background:var(--brand);color:#fff;font-weight:700;cursor:pointer}
+    button:hover{background:var(--brand-600)}
+
+    /* Table styling to occupy full width */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 14px;
+      width: 100%;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      text-align: center;
+      width: calc(100% / var(--columns, 13)); /* Dynamic width based on columns */
+    }
+    th{background:#eef2ff}
+    td:hover{background:#f8fafc}
+    .hl{background:#f1f5ff}
+
+    .result{margin-top:12px;font-weight:700; text-align: center; font-size: 20px;   /* 👈 Add this */}
+    .footer{color:#475569;text-align:center;margin:32px 0}
+    
+    .switch{
+      appearance:none;
+      width:46px;
+      height:26px;
+      background:#e5e7eb;
+      border-radius:999px;
+      position:relative;
+      outline:none;
+      cursor:pointer
+    }
+    .switch::after{
+      content:"";
+      position:absolute;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:#fff;
+      left:3px;
+      top:3px;
+      transition:left .2s ease
+    }
+    .switch:checked{background:#1f2937}
+    .switch:checked::after{left:23px}
+    
+    /* Dark mode styles */
+    body.dark{background:#0b1220;color:#e5e7eb}
+    body.dark nav, body.dark header{background:#0d1426;border-color:#1f2937}
+    body.dark .card{background:#111827}
+    body.dark th{background:#172554}
+    body.dark td, body.dark th{border-color:#1f2937}
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      #testMe {
+        margin-left: 0 !important;
+        margin-top: 10px;
+      }
+      
+      .toggle {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      
+      header {
+        flex-direction: column;
+        padding: 10px;
+      }
+      
+      th, td {
+        padding: 8px 4px;
+        font-size: 14px;
+      }
+    }
+
+    /* Fix for dark mode hover colors */
+    body.dark td:hover {background: #1e293b}
+    body.dark .hl {background: #1e293b}
+    
+    /* Fix for header highlighting in dark mode */
+    body.dark .header-highlight {
+      background: #1e40af !important;
+      color: #e5e7eb;
+    }
+    
+    /* Follow-the-cursor tooltip */
+    .cursor-answer{
+      position: fixed;             /* follows viewport (works inside scrollable table) */
+      top: 0;
+      left: 0;
+      transform: translate(12px, 12px); /* a little offset from the pointer */
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #0f172a;         /* dark slate */
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+      box-shadow: 0 8px 20px rgba(2,6,23,.18);
+      pointer-events: none;        /* never steals hover/click */
+      opacity: 0;
+      transition: opacity .12s ease;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+    body:not(.dark) .cursor-answer{
+      background: #111827;
+      color: #fff;
+    }
+    body.dark .cursor-answer{
+      background: #0b1220;
+      color: #e5e7eb;
+      box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    }
+
+    /* Hide tooltip on very small screens (optional) */
+    @media (max-width: 480px){
+      .cursor-answer{ display:none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="toggle">
+      <label for="darkMode">Dark Mode</label>
+      <input type="checkbox" id="darkMode" class="switch" />
+    </div>
+    <h1>Interactive Multiplication Table</h1>
+  </header>
+  
+  <nav>
+    <a href="ProgressTracker and Practice mode.html">Practice Mode</a>
+    <a href="../Welcome Page.html">Log out</a>
+  </nav>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="controls">
+        <label>Range:
+          <select id="range">
+            <option value="10">×10</option>
+            <option value="12" selected>×12</option>
+           <!--<option value="20">×20</option>-->
+          </select>
+        </label>
+        <button id="build">Generate</button>
+        <button id="testMe" style="margin-left:auto" onclick="location.href='ProgressTracker and Practice mode.html'">Test Me</button>
+      </div>
+
+      <div class="table-container">
+        <table id="table" aria-describedby="result"></table>
+      </div>
+
+      <!-- Bottom “answer” area (also updated on hover) -->
+      <div id="result" class="result" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="footer">&copy; 2025 IMT, All Rights Reserved.</footer>
+
+  <!-- Floating tooltip that follows the cursor -->
+  <div id="hoverTip" class="cursor-answer" role="status" aria-live="polite"></div>
+
+<script>
+  const tableEl   = document.getElementById('table');
+  const resEl     = document.getElementById('result');
+  const rangeEl   = document.getElementById('range');
+  const darkToggle= document.getElementById('darkMode');
+  const hoverTip  = document.getElementById('hoverTip');
+
+  // Persist dark mode
+  const THEME_KEY = 'elitech_dark';
+  if (localStorage.getItem(THEME_KEY)==='1'){
+    document.body.classList.add('dark');
+    darkToggle.checked = true;
+  }
+  darkToggle.addEventListener('change', ()=>{
+    document.body.classList.toggle('dark', darkToggle.checked);
+    localStorage.setItem(THEME_KEY, darkToggle.checked ? '1':'0');
+  });
+
+  function showTip(text){
+    hoverTip.textContent = text;
+    hoverTip.style.opacity = '1';
+  }
+  function hideTip(){
+    hoverTip.style.opacity = '0';
+  }
+  function moveTip(evt){
+    // Position relative to viewport with small offset (handled in CSS transform)
+    hoverTip.style.top  = `${evt.clientY}px`;
+    hoverTip.style.left = `${evt.clientX}px`;
+  }
+
+  function build(){
+    const n = Number(rangeEl.value)||12;
+    document.documentElement.style.setProperty('--columns', n + 1);
+    tableEl.innerHTML = '';
+
+    // Create header row
+    const headerRow = document.createElement('tr');
+    const emptyHeader = document.createElement('th');
+    headerRow.appendChild(emptyHeader);
+    for (let j = 1; j <= n; j++) {
+      const th = document.createElement('th');
+      th.textContent = j;
+      headerRow.appendChild(th);
+    }
+    tableEl.appendChild(headerRow);
+
+    // Create data rows
+    for (let i = 1; i <= n; i++) {
+      const row = document.createElement('tr');
+
+      // Row header
+      const rowHeader = document.createElement('th');
+      rowHeader.textContent = i;
+      row.appendChild(rowHeader);
+
+      // Cells
+      for (let j = 1; j <= n; j++) {
+        const cell = document.createElement('td');
+        const val = i * j;
+        cell.textContent = val;
+
+        // Hover: highlight + tooltip + bottom answer
+        cell.addEventListener('mouseenter', (evt) => {
+          cell.classList.add('hl');
+          rowHeader.classList.add('header-highlight');
+          headerRow.children[j].classList.add('header-highlight');
+
+          const eq = `${i} × ${j} = ${val}`;
+          resEl.textContent = eq;          // bottom area
+          showTip(eq);                      // tooltip
+          moveTip(evt);                     // initial position
+          // Track pointer as it moves while on the cell
+          cell.addEventListener('mousemove', moveTip);
+        });
+
+        cell.addEventListener('mouseleave', () => {
+          cell.classList.remove('hl');
+          rowHeader.classList.remove('header-highlight');
+          headerRow.children[j].classList.remove('header-highlight');
+
+          hideTip();
+          // Stop tracking pointer for this cell
+          cell.removeEventListener('mousemove', moveTip);
+        });
+
+        // Click still sets the bottom result (kept for users who expect click)
+        cell.addEventListener('click', () => {
+          const eq = `${i} × ${j} = ${val}`;
+          resEl.textContent = eq;
+        });
+
+        row.appendChild(cell);
+      }
+      tableEl.appendChild(row);
+    }
+    resEl.textContent = '';
+  }
+
+  document.getElementById('build').addEventListener('click', build);
+  build();
+</script>
+</body>
+</html>

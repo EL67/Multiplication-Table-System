@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice & Progress</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brand:#0033cc; --brand-600:#002299; --ink:#0f172a; --muted:#64748b; --card:#fff; --bg:#f8fafc;
+      --ok:#16a34a; --err:#dc2626; --amber:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI; background:var(--bg); color:var(--ink)}
+    
+    /* Header styling */
+    header{
+      padding:18px 20px;
+      background:#fff;
+      box-shadow:0 2px 10px rgba(2,6,23,.06);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header h1{margin:0; text-align: center;}
+    
+    /* Dark mode toggle in top left */
+    .toggle{
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Centered navigation */
+    nav{
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #fff;
+    }
+    nav a{color:var(--brand);text-decoration:none;font-weight:700}
+
+    .container{max-width:1100px;margin:28px auto;padding:0 16px;display:grid;grid-template-columns: 1.1fr .9fr;gap:24px}
+    @media (max-width: 900px){ .container{grid-template-columns:1fr} }
+
+    .card{background:var(--card);border-radius:16px;box-shadow:0 12px 30px rgba(2,6,23,.08);padding:20px}
+    .title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+    .title h2{margin:0;font-size:1.1rem}
+
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    select, input[type=number]{padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;outline:none}
+    button{padding:10px 14px;border:none;border-radius:12px;background:var(--brand);color:#fff;font-weight:700;cursor:pointer}
+    button:hover{background:var(--brand-600)}
+
+    .problem{font-size:2rem;font-weight:800;margin:18px 0}
+    .feedback{min-height:24px;margin-top:6px}
+
+    .bar{height:10px;background:#eef2ff;border-radius:999px;overflow:hidden}
+    .bar > span{display:block;height:100%;width:0;background:linear-gradient(90deg, var(--brand), #60a5fa);transition:width .35s ease}
+
+    .streak{font-weight:700;color:var(--amber)}
+
+    .badge{display:none;margin-top:12px;font-weight:800;color:var(--ok);}
+    .badge.show{display:block;animation:pop .6s ease both}
+    @keyframes pop{from{opacity:0;transform:scale(.9) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+    .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:12px}
+    .pill{background:#f1f5f9;border:1px solid #e5e7eb;border-radius:999px;padding:8px 12px;font-size:.9rem;display:flex;justify-content:space-between;gap:8px}
+    .pill .ok{color:var(--ok);font-weight:700}
+    .pill .fail{color:var(--err);font-weight:700}
+    
+    /* Dark mode styles */
+    body.dark{background:#0b1220;color:#e5e7eb}
+    body.dark header, body.dark nav{background:#0d1426;border-color:#1f2937}
+    body.dark .card{background:#111827}
+    body.dark .pill{background:#1e293b;border-color:#334155}
+    body.dark select, body.dark input[type=number]{background:#1e293b;color:#e5e7eb;border-color:#334155}
+    
+    /* Switch styling */
+    .switch {
+      appearance: none;
+      width: 46px;
+      height: 26px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      position: relative;
+      outline: none;
+      cursor: pointer;
+    }
+    .switch::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      left: 3px;
+      top: 3px;
+      transition: left .2s ease;
+    }
+    .switch:checked {
+      background: #1f2937;
+    }
+    .switch:checked::after {
+      left: 23px;
+    }
+    .footer{color:#475569;text-align:center;margin:32px 0}
+
+    /* Visually hidden (for a11y labels) */
+    .sr-only{
+      position:absolute !important;
+      width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="toggle">
+      <label for="darkMode">Dark Mode</label>
+      <input type="checkbox" id="darkMode" class="switch" />
+    </div>
+    <h1>Practice Mode & Progress Tracker</h1>
+  </header>
+  
+  <nav>
+    <a href="index.html">Multiplication Table</a>
+    <!-- If possible, avoid spaces in file names; otherwise keep as-is -->
+    <a href="../Welcome Page.html">Log out</a>
+  </nav>
+
+  <main class="container">
+    <!-- Practice -->
+    <section class="card">
+      <div class="title">
+        <!--<h2>Practice Mode</h2>-->
+        <div class="row">
+          <label>Difficulty:
+            <select id="difficulty" aria-label="Select difficulty">
+              <option value="easy">Easy (1–5)</option>
+              <option value="medium">Medium (1–10)</option>
+              <option value="hard">Hard (5–12)</option>
+            </select>
+          </label>
+          <label>Operator:
+            <select id="operator" aria-label="Select operator">
+              <option value="*">× Multiply</option>
+              <option value="+">＋ Add</option>
+              <option value="-">− Subtract</option>
+              <option value="/">÷ Divide</option>
+            </select>
+          </label>
+          <button id="newQ">Next Question</button>
+        </div>
+      </div>
+
+      <div class="problem" id="problem">What is 2 × 3?</div>
+      <div class="row">
+        <label for="answer" class="sr-only">Your answer</label>
+        <input type="number" id="answer" placeholder="Enter your answer" />
+        <button id="submit">Submit</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+
+      <div style="margin-top:16px">
+        <div class="row" style="justify-content:space-between">
+          <div>Progress</div>
+          <div><span id="pct">0%</span></div>
+        </div>
+        <div class="bar" aria-label="Progress"><span id="bar"></span></div>
+      </div>
+
+      <div class="row" style="margin-top:12px;justify-content:space-between">
+        <div>Streak: <span class="streak" id="streak">0</span></div>
+        <div>Badges: <span id="badgeCount">0</span></div>
+      </div>
+      <p id="badge" class="badge">🎉 Badge earned! Keep it up! 🎉</p>
+    </section>
+
+    <!-- Progress Tracker -->
+    <aside class="card">
+      <div class="title"><h2>Progress Tracker</h2></div>
+      <div id="progress" class="list"></div>
+    </aside>
+  </main>
+
+  <footer class="footer">&copy; 2025 IMT, All Rights Reserved.</footer>
+
+  <script>
+    // Persistent state keys
+    const STORAGE_KEY = 'elitech_progress_v1';
+
+    const state = {
+      correct: 0,
+      total: 0,
+      streak: 0,
+      badges: 0,
+      history: [] // {q, a, correct}
+    };
+
+    // Load saved progress safely
+    let saved = null;
+    try {
+      saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    } catch (e) {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+    if (saved) Object.assign(state, saved);
+
+    const problemEl = document.getElementById('problem');
+    const answerEl = document.getElementById('answer');
+    const feedbackEl = document.getElementById('feedback');
+    const streakEl = document.getElementById('streak');
+    const pctEl = document.getElementById('pct');
+    const barEl = document.getElementById('bar');
+    const badgeEl = document.getElementById('badge');
+    const badgeCountEl = document.getElementById('badgeCount');
+    const progressList = document.getElementById('progress');
+    const darkToggle = document.getElementById('darkMode');
+
+    const diffSel = document.getElementById('difficulty');
+    const opSel = document.getElementById('operator');
+
+    let current = {a:0,b:0,op:'*',ans:0};
+    
+    // Persist dark mode
+    const THEME_KEY = 'elitech_dark';
+    if (localStorage.getItem(THEME_KEY)==='1'){
+      document.body.classList.add('dark');
+      darkToggle.checked = true;
+    }
+    darkToggle.addEventListener('change', ()=>{
+      document.body.classList.toggle('dark', darkToggle.checked);
+      localStorage.setItem(THEME_KEY, darkToggle.checked ? '1':'0');
+    });
+    
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+
+    function boundsFor(diff){
+      if (diff==='easy') return [1,5];
+      if (diff==='medium') return [1,10];
+      return [5,12];
+    }
+
+    function makeQuestion(){
+      const [lo,hi] = boundsFor(diffSel.value);
+      const op = opSel.value;
+      let a = randInt(lo,hi), b = randInt(lo,hi);
+
+      if (op==='/' ){
+        // Ensure clean division problems
+        b = randInt(lo,hi);
+        const prod = a*b; // make dividend divisible by b
+        current = {a:prod,b,op,ans: prod/b};
+      } else if (op==='-'){
+        // Avoid negative results for beginner levels
+        const x = Math.max(a,b), y = Math.min(a,b);
+        current = {a:x,b:y,op,ans:x-y};
+      } else if (op==='*'){
+        current = {a,b,op,ans:a*b};
+      } else {
+        current = {a,b,op,ans:a+b};
+      }
+      renderQuestion();
+    }
+
+    function renderQuestion(){
+      const sym = current.op==='*' ? '×' : current.op==='/' ? '÷' : current.op;
+      problemEl.textContent = `What is ${current.a} ${sym} ${current.b}?`;
+      feedbackEl.textContent = '';
+      feedbackEl.style.color = ''; // reset color
+      answerEl.value = '';
+      answerEl.focus();
+    }
+
+    function renderProgress(){
+      const pct = state.total ? Math.round((state.correct/state.total)*100) : 0;
+      pctEl.textContent = pct + '%';
+      barEl.style.width = pct + '%';
+      streakEl.textContent = state.streak;
+      badgeCountEl.textContent = state.badges;
+
+      // Render last 10 items
+      progressList.innerHTML = '';
+      const recent = state.history.slice(-10).reverse();
+      for (const item of recent){
+        const pill = document.createElement('div');
+        pill.className = 'pill';
+        pill.innerHTML = `<span>${item.q}</span><span class="${item.correct? 'ok':'fail'}">${item.correct? '✔':'✖'}</span>`;
+        progressList.appendChild(pill);
+      }
+    }
+
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+    function awardBadge(){
+      state.badges += 1;
+      badgeEl.classList.add('show');
+      setTimeout(()=> badgeEl.classList.remove('show'), 3000);
+    }
+
+    function submitAnswer(){
+      const raw = answerEl.value.trim();
+      if (raw === "") {
+        feedbackEl.textContent = 'Please enter an answer.';
+        feedbackEl.style.color = '#f59e0b'; // amber
+        answerEl.focus();
+        return;
+      }
+
+      const val = Number(raw);
+      const isCorrect = (val === current.ans);
+
+      state.total += 1;
+      if (isCorrect){
+        state.correct += 1;
+        state.streak += 1;
+        feedbackEl.textContent = '✅ Correct!';
+        feedbackEl.style.color = '#16a34a';
+        if (state.streak>0 && state.streak % 5 === 0){ awardBadge(); }
+      } else {
+        state.streak = 0;
+        feedbackEl.textContent = `❌ Incorrect. Answer: ${current.ans}`;
+        feedbackEl.style.color = '#dc2626';
+      }
+
+      const symForHistory = current.op === '*' ? '×' : current.op === '/' ? '÷' : current.op;
+      state.history.push({ q:`${current.a} ${symForHistory} ${current.b} = ${current.ans}`, a: val, correct: isCorrect });
+      if (state.history.length>200) state.history.shift();
+
+      save();
+      renderProgress();
+      makeQuestion();
+    }
+
+    document.getElementById('submit').addEventListener('click', submitAnswer);
+    document.getElementById('newQ').addEventListener('click', makeQuestion);
+    answerEl.addEventListener('keydown', (e)=>{ if (e.key==='Enter') submitAnswer(); });
+
+    // Init
+    renderProgress();
+    makeQuestion();
+  </script>
+</body>
+</html>

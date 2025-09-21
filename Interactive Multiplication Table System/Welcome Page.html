@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+  <style>
+     :root{
+      --brand-50:#eef2ff;  --brand-100:#e0e7ff; --brand-600:#4f46e5; --brand-700:#4338ca; --brand-800:#3730a3;
+      --ink:#0f172a; --ink-2:#334155; --muted:#6b7280; --bg:#f8fafc; --card:#ffffff; --ring: 0 0 0 6px rgb(79 70 229 / .15);
+      --ok:#16a34a; --err:#dc2626; --warn:#d97706; --shadow-lg:0 25px 60px rgb(2 6 23 / .12), 0 6px 20px rgb(2 6 23 / .06);
+      --radius: 16px;
+    }
+    /* CSS Document */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+         background: linear-gradient(90deg, #3730a3, #4f46e5); /* make whole page one color */
+    }
+    
+    /* Brand logo styling */
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: white;
+        border-radius: 8px;
+        font-weight: 700;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Styling for the navigation bar - Updated to match sign-in page */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(90deg, #3730a3, #4f46e5);
+        padding: 14px 20px;
+        margin: 0;
+        box-shadow: 0 6px 20px rgba(2, 6, 23, 0.12);
+        color: white;
+    }
+    
+    .nav-links {
+        list-style-type: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .nav-links li {
+        margin: 0 15px;
+    }
+    
+    .nav-links li a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: 600;
+        position: relative;
+    }
+    
+    .nav-links li a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 0;
+        height: 2px;
+        background: #fff;
+        transition: width 0.25s ease;
+    }
+    
+    .nav-links li a:hover::after {
+        width: 100%;
+    }
+
+    /* Styling for the hero section */
+    .hero {    
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 50px 100px;
+       background: linear-gradient(90deg, #3730a3, #4f46e5);
+        color: #fff;
+    }
+    
+    .hero-text {
+        max-width: 50%;
+    }
+    
+    .hero-text h1 {
+        font-size: 48px;
+        margin: 0 0 20px;
+    }
+    
+    .hero-text p {
+        font-size: 18px;
+        line-height: 1.5;
+    }
+    
+    .hero-text button {
+        background-color: #fff;
+        color: #4f46e5;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 12px;
+        cursor: pointer;
+        margin-top: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s ease;
+    }
+    
+    .hero-text button:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hero-image {
+        max-width: 45%;
+    }
+    
+    .hero-image img {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+    
+    footer {
+        background: linear-gradient(90deg, #3730a3, #4f46e5);
+        color: #fff;
+        text-align: center;
+        padding: 20px 0;
+        font-size: large;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .navbar {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .hero {
+            flex-direction: column;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .hero-text {
+            max-width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-image {
+            max-width: 100%;
+        }
+        
+        .nav-links {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-links li {
+            margin: 0.5rem;
+        }
+    }
+</style>
+</head>
+<body>
+
+    <!-- Navigation bar with IMT logo -->
+    <header class="navbar" aria-label="Primary">
+        <a href="Pages/Login.html" class="brand" aria-label="IMT Home">
+            <span class="brand-mark" aria-hidden="true">M</span>
+            IMT
+        </a>
+        
+        <ul class="nav-links" role="list">
+            <!--<li><a href="#">Home</a></li>-->
+            <li><a href="Pages/Login.html">Login</a></li>
+        </ul>
+    </header>
+    <main>
+    <!-- Hero section with a call-to-action and an image -->
+    <section class="hero"> 
+        <div class="hero-text">
+            <h1>Math Is Fun With IMT!</h1>
+            <p>Discover a new way to master multiplication! Our website offers engaging and effective tools designed to help students learn the multiplication table with ease. Join us and transform learning into an exciting and interactive experience. Click the button below to log in and start your journey with our Interactive Multiplication Table System!</p>
+            <!-- Login button with a smooth scroll effect -->
+            <a href="Pages/Login.html">
+                <button>Login</button>
+            </a>
+        </div>
+        <div class="hero-image">
+            <img src="images/math.jpg" alt="Students doing math">
+        </div>
+    </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 IMT, All Rights Reserved.</p>
+
+    </footer>
+</body>
+</html>
